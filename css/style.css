@@ -1,14 +1,17 @@
 
 
-header {
-
+div {
+	margin:auto;
+	text-align: center;
 }
-
 img {
-	float: left;
-	overflow: auto;
-}
 
+	overflow: auto;
+;
+}
+h1{
+	vertical-align:text-top;
+}
 
 h2 {
 	text-indent: 50px;
@@ -47,7 +50,7 @@ p.note {
   padding: 10px 20px;
   font-size: 18px;
   cursor: pointer;
-  
+
   text-decoration: none;
   outline: none;
   color: #fff;
@@ -55,13 +58,13 @@ p.note {
   border: none;
   border-radius: 6px;
   box-shadow: 0 3px #999;
-  
+
 }
 
 /* buttons on the finish popup */
 .verticleButton {
 
-  width: 280px;	
+  width: 280px;
   font-size: 18px;
   cursor: pointer;
   margin-bottom: 10px;
@@ -87,7 +90,7 @@ div.finish {
   font: 25px/1.5 Arial, Helvetic, sans-serif;
   margin:auto;
 	margin-bottom: 20px;
- 
+
 }
 
 
@@ -121,12 +124,12 @@ div.finish {
 	margin-bottom: 30px;
   padding: 0;
   border: 1px solid #888;
-  width: 100%; 
+  width: 100%;
   position: fixed;
   bottom: 0;
   text-align: center;
   clear: both;
-  
+
 }
 .close {
   color: #aaaaaa;
