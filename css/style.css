@@ -2,28 +2,27 @@
 
 .div1{
 	overflow:auto;
-	float:center;
-	padding-left:25%
+	display:flex;
+	justify-content: center;
 
 }
 .div2{
-	float:left;
-text-align: center;
+display: inline-block;
 }
 
 
 div {
-	margin:auto;
-	text-align: center;
+
 }
 img {
 float:left;
-width:100px;
-height:100px;
+display:inline-block;
+vertical-align: text-top;
 
 }
 h1{
-
+margin-bottom: 10px;
+marin:0;
 }
 
 h2 {
@@ -111,7 +110,10 @@ div.finish {
 	max-width: 800px;
 	margin:auto;
 	padding:10px;
-
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
 
 }
 
