@@ -1,0 +1,47 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #fff;
+}
+
+.container {
+    text-align: center;
+    position: relative; /* Make sure container is relative for absolute positioning inside */
+    max-width: 600px; /* Adjust as needed */
+    width: 100%;
+}
+
+h1 {
+    margin: 20px 0;
+}
+
+.button-container button {
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative; /* Adjust position type as needed */
+}
+
+.yes-button {
+    background-color: green;
+}
+
+.yes-button:hover {
+    background-color: darkgreen;
+}
+
+.no-button {
+    background-color: red;
+}
+
+.no-button:hover {
+    background-color: darkred;
+}
