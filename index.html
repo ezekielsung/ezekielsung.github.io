@@ -1,113 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Valentine's Day Response</title>
-<style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        height: 100vh;
-        background-color: #fff;
-    }
-
-    .container, .popup {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        text-align: center;
-        position: absolute;
-        width: 100%;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    }
-
-    h1 {
-        margin: 20px 0;
-    }
-
-    .button-container button {
-        padding: 10px 20px;
-        margin: 10px;
-        border: none;
-        color: white;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .yes-button {
-        background-color: green;
-    }
-
-    .no-button {
-        background-color: red;
-    }
-
-    .popup {
-        display: none;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 20px;
-        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-        z-index: 2;
-    }
-
-    .sorry-button {
-        background-color: darkred;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        cursor: pointer;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine's Surprise 💖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #fde2e4; text-align: center; overflow: hidden; font-family: Arial, sans-serif; }
+        .flying-text { position: absolute; font-size: 20px; animation: fly 3s linear infinite; }
+        @keyframes fly { 
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-100vh); opacity: 0; }
+        }
+        .puzzle-container { display: grid; grid-template-columns: repeat(5, 60px); gap: 3px; margin: 20px auto; width: 320px; }
+        .puzzle-piece { width: 60px; height: 60px; background-size: 300px 300px; cursor: pointer; border-radius: 5px; }
+        .hidden { display: none; }
+        .heart { width: 200px; height: 200px; background: url('heart-shape.png') no-repeat center/contain; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
+        .floating-button { position: absolute; transition: top 0.3s, left 0.3s; }
+    </style>
 </head>
 <body>
-<div class="container">
-    <img class="love-bear-gif" src="https://gifdb.com/images/high/cute-love-bear-roses-ou7zho5oosxnpo6k.gif" alt="Cute Love Bear">
-    <h1 id="message">Will you be my valentine?</h1>
-    <div class="button-container">
-        <button class="yes-button">Yes</button>
-        <button class="no-button">No</button>
+
+    <!-- Step 1: Crying GIF & Apology -->
+    <div id="step1">
+        <img src="your-crying-gif.gif" alt="Crying GIF" class="w-1/2 mx-auto rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-red-500 mt-4">I forgot to ask... will you forgive me? 🥺</h2>
+        <button id="sorryBtn" class="mt-4 px-6 py-2 bg-red-500 text-white text-xl font-semibold rounded-lg hover:bg-red-700">
+            I'm Sorry 😭
+        </button>
     </div>
-</div>
-<div class="popup">
-    <p>WHY YOU TAKING SO LONG? IS THIS A HARD DECISION??</p>
-    <button class="sorry-button" onclick="window.location.reload();">Sorry</button>
-</div>
-<script>
-    let yesClicked = false;
 
-    document.querySelector('.yes-button').addEventListener('click', function() {
-        yesClicked = true;
-        document.querySelector('.love-bear-gif').style.display = 'none';
-        document.getElementById('message').textContent = "Yay!!! I'm excited!";
-        var newGif = document.createElement('img');
-        newGif.src = 'https://media.tenor.com/gUiu1zyxfzYAAAAi/bear-kiss-bear-kisses.gif';
-        newGif.alt = 'Bear Kisses';
-        document.querySelector('.container').appendChild(newGif);
-        document.querySelector('.button-container').style.display = 'none';
-    });
+    <!-- Step 2: Flying 'I'm Sorry' texts -->
+    <div id="flyingTexts"></div>
 
-    document.querySelector('.no-button').addEventListener('mouseenter', function(e) {
-        const container = document.querySelector('body');
-        e.target.style.position = 'absolute';
-        e.target.style.top = Math.random() * (window.innerHeight - e.target.offsetHeight) + 'px';
-        e.target.style.left = Math.random() * (window.innerWidth - e.target.offsetWidth) + 'px';
-    });
+    <!-- Step 3: Puzzle Game -->
+    <div id="step2" class="hidden">
+        <h1 class="text-3xl font-bold text-pink-600">Solve this puzzle to see your surprise! 💖</h1>
+        <div id="puzzle" class="puzzle-container"></div>
+    </div>
 
-    setTimeout(function() {
-        if (!yesClicked) {
-            document.querySelector('.container').style.display = 'none';
-            document.body.style.backgroundImage = "url('ezekiel.JPG')";
-            document.body.style.backgroundSize = "cover";
-            document.body.style.backgroundRepeat = "no-repeat";
-            document.body.style.backgroundPosition = "center center";
-            document.querySelector('.popup').style.display = 'flex';
+    <!-- Step 4: Valentine Question -->
+    <div id="step3" class="hidden">
+        <h2 class="text-4xl font-bold text-red-500 mt-4">Will you be my Valentine? 💕</h2>
+        <div class="heart">
+            <img src="your-couple-photo.jpg" class="w-3/4 rounded-full">
+        </div>
+        <div class="mt-4">
+            <button id="yesBtn" class="px-6 py-2 bg-pink-500 text-white text-xl font-semibold rounded-lg hover:bg-pink-700">
+                Yes! 💖
+            </button>
+            <button id="noBtn" class="px-6 py-2 bg-gray-500 text-white text-xl font-semibold rounded-lg floating-button">
+                No 😢
+            </button>
+        </div>
+    </div>
+
+    <!-- Step 5: 404 Heartbreak Page -->
+    <div id="step4" class="hidden">
+        <h1 class="text-4xl text-red-700 font-bold">Error 404: You Broke Ezekiel’s Heart 💔</h1>
+    </div>
+
+    <script>
+        let sorryCount = 0;
+        let tiles = Array.from({ length: 2000 }, (_, i) => i).sort(() => Math.random() - 0.5);
+        let noClickCount = 0;
+
+        document.getElementById("sorryBtn").onclick = function () {
+            for (let i = 0; i < 100; i++) {
+                let text = document.createElement("div");
+                text.classList.add("flying-text");
+                text.innerText = "I'm Sorry!";
+                text.style.color = `hsl(${Math.random() * 360}, 100%, 50%)`;
+                text.style.fontSize = `${Math.random() * 30 + 10}px`;
+                text.style.left = `${Math.random() * 100}vw`;
+                text.style.top = `${Math.random() * 100}vh`;
+                document.getElementById("flyingTexts").appendChild(text);
+            }
+            document.getElementById("sorryBtn").innerText = "I Forgive You 💖";
+            document.getElementById("sorryBtn").onclick = function () {
+                document.getElementById("step1").classList.add("hidden");
+                document.getElementById("step2").classList.remove("hidden");
+                renderPuzzle();
+            };
+        };
+
+        function renderPuzzle() {
+            const puzzle = document.getElementById("puzzle");
+            puzzle.innerHTML = "";
+            tiles.forEach((num, i) => {
+                let div = document.createElement("div");
+                div.classList.add("puzzle-piece");
+                div.style.backgroundImage = `url('your-couple-photo.jpg')`;
+                div.style.backgroundPosition = `${(num % 5) * -60}px ${(Math.floor(num / 5)) * -60}px`;
+                div.setAttribute("data-index", num);
+                div.onclick = () => moveTile(i);
+                puzzle.appendChild(div);
+            });
         }
-    }, 20000);
-</script>
+
+        function moveTile(index) {
+            const emptyIndex = tiles.indexOf(24);
+            const validMoves = [index - 1, index + 1, index - 5, index + 5];
+            if (!validMoves.includes(emptyIndex)) return;
+
+            [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+            renderPuzzle();
+            checkWin();
+        }
+
+        function checkWin() {
+            if (tiles.every((num, i) => num === i)) {
+                document.getElementById("step2").classList.add("hidden");
+                document.getElementById("step3").classList.remove("hidden");
+            }
+        }
+
+        document.getElementById("yesBtn").onclick = function () {
+            document.body.innerHTML = `<img src="your-happy-gif.gif" class="w-full h-screen object-contain">`;
+        };
+
+        document.getElementById("noBtn").onclick = function () {
+            noClickCount++;
+            if (noClickCount >= 6) {
+                document.getElementById("step3").classList.add("hidden");
+                document.getElementById("step4").classList.remove("hidden");
+            } else {
+                this.style.top = `${Math.random() * 80}vh`;
+                this.style.left = `${Math.random() * 80}vw`;
+            }
+        };
+
+        renderPuzzle();
+    </script>
 </body>
 </html>
