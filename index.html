@@ -12,18 +12,43 @@
             0% { transform: translateY(0); opacity: 1; }
             100% { transform: translateY(-100vh); opacity: 0; }
         }
-        .puzzle-container { display: grid; grid-template-columns: repeat(5, 60px); gap: 3px; margin: 20px auto; width: 320px; }
-        .puzzle-piece { width: 60px; height: 60px; background-size: 300px 300px; cursor: pointer; border-radius: 5px; }
+        .puzzle-container { 
+            display: grid; 
+            grid-template-columns: repeat(5, 80px); 
+            grid-template-rows: repeat(5, 80px); 
+            gap: 2px; 
+            margin: 20px auto; 
+            width: 400px; 
+            height: 400px; 
+        }
+        .puzzle-piece { 
+            width: 80px; 
+            height: 80px; 
+            background-size: 400px 400px; 
+            cursor: pointer; 
+            border-radius: 3px;
+            transition: all 0.2s ease-in-out;
+        }
         .hidden { display: none; }
         .heart { width: 200px; height: 200px; background: url('heart-shape.png') no-repeat center/contain; display: flex; align-items: center; justify-content: center; margin: 0 auto; }
-        .floating-button { position: absolute; transition: top 0.3s, left 0.3s; }
+        .floating-button { 
+            position: absolute; 
+            transition: top 0.3s, left 0.3s; 
+        }
+        .dev-button { 
+            position: fixed; bottom: 20px; right: 20px; 
+            background-color: #ff4747; color: white; 
+            padding: 10px 15px; border-radius: 5px; 
+            font-size: 14px; cursor: pointer;
+            display: none; /* Hide by default */
+        }
     </style>
 </head>
 <body>
 
     <!-- Step 1: Crying GIF & Apology -->
     <div id="step1">
-        <img src="your-crying-gif.gif" alt="Crying GIF" class="w-1/2 mx-auto rounded-lg shadow-md">
+        <img src="crying.gif" alt="Crying GIF" class="w-1/2 mx-auto rounded-lg shadow-md">
         <h2 class="text-2xl font-bold text-red-500 mt-4">I forgot to ask... will you forgive me? 🥺</h2>
         <button id="sorryBtn" class="mt-4 px-6 py-2 bg-red-500 text-white text-xl font-semibold rounded-lg hover:bg-red-700">
             I'm Sorry 😭
@@ -41,11 +66,11 @@
 
     <!-- Step 4: Valentine Question -->
     <div id="step3" class="hidden">
-        <h2 class="text-4xl font-bold text-red-500 mt-4">Will you be my Valentine? 💕</h2>
+        <h2 class="text-4xl font-bold text-red-500 mt-4" style="margin-bottom:50px;">Will you be my Valentine? 💕</h2>
         <div class="heart">
-            <img src="your-couple-photo.jpg" class="w-3/4 rounded-full">
+            <img src="couple.jpg" class="w-3/4 rounded-full">
         </div>
-        <div class="mt-4">
+        <div class="mt-4" style="display:grid;justify-content:end;margin-left:200px;margin-right:200px;margin-top:50px;">
             <button id="yesBtn" class="px-6 py-2 bg-pink-500 text-white text-xl font-semibold rounded-lg hover:bg-pink-700">
                 Yes! 💖
             </button>
@@ -60,10 +85,16 @@
         <h1 class="text-4xl text-red-700 font-bold">Error 404: You Broke Ezekiel’s Heart 💔</h1>
     </div>
 
+    <!-- Dev Skip Button -->
+    <button id="devSkip" class="dev-button">Skip Puzzle 🔥</button>
+
     <script>
-        let sorryCount = 0;
-        let tiles = Array.from({ length: 2000 }, (_, i) => i).sort(() => Math.random() - 0.5);
         let noClickCount = 0;
+        let imgSrc = "ezekiel.jpg"; // Set your puzzle image here
+        let gridSize = 3; // Ensure the puzzle is 3x3
+        let tileSize = 100; // Each tile is 100px x 100px
+        let tiles = Array.from({ length: gridSize * gridSize }, (_, i) => i);
+        let emptyTile = gridSize * gridSize - 1;
 
         document.getElementById("sorryBtn").onclick = function () {
             for (let i = 0; i < 100; i++) {
@@ -80,33 +111,70 @@
             document.getElementById("sorryBtn").onclick = function () {
                 document.getElementById("step1").classList.add("hidden");
                 document.getElementById("step2").classList.remove("hidden");
+                shuffleTiles();
                 renderPuzzle();
+                document.getElementById("devSkip").style.display = "block"; // Show skip button
             };
         };
 
-        function renderPuzzle() {
-            const puzzle = document.getElementById("puzzle");
-            puzzle.innerHTML = "";
-            tiles.forEach((num, i) => {
-                let div = document.createElement("div");
-                div.classList.add("puzzle-piece");
-                div.style.backgroundImage = `url('your-couple-photo.jpg')`;
-                div.style.backgroundPosition = `${(num % 5) * -60}px ${(Math.floor(num / 5)) * -60}px`;
-                div.setAttribute("data-index", num);
-                div.onclick = () => moveTile(i);
-                puzzle.appendChild(div);
-            });
+        function shuffleTiles() {
+    do {
+        // Shuffle the tiles randomly
+        for (let i = tiles.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
         }
+    } while (!isSolvable(tiles) || tiles.indexOf(emptyTile) !== tiles.length - 1); 
+    // Ensures solvable & empty tile is in the last position
+}
 
-        function moveTile(index) {
-            const emptyIndex = tiles.indexOf(24);
-            const validMoves = [index - 1, index + 1, index - 5, index + 5];
-            if (!validMoves.includes(emptyIndex)) return;
-
-            [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
-            renderPuzzle();
-            checkWin();
+function isSolvable(puzzle) {
+    let inversions = 0;
+    for (let i = 0; i < puzzle.length - 1; i++) {
+        for (let j = i + 1; j < puzzle.length; j++) {
+            if (puzzle[i] !== emptyTile && puzzle[j] !== emptyTile && puzzle[i] > puzzle[j]) {
+                inversions++;
+            }
         }
+    }
+    return inversions % 2 === 0; // Solvable if inversions are even
+}
+
+    function renderPuzzle() {
+        const puzzle = document.getElementById("puzzle");
+        puzzle.innerHTML = "";
+        puzzle.style.display = "grid";
+        puzzle.style.gridTemplateColumns = `repeat(${gridSize}, ${tileSize}px)`;
+        puzzle.style.gridTemplateRows = `repeat(${gridSize}, ${tileSize}px)`;
+        puzzle.style.width = `${gridSize * tileSize}px`;
+        puzzle.style.height = `${gridSize * tileSize}px`;
+
+        tiles.forEach((num, i) => {
+            let div = document.createElement("div");
+            div.classList.add("puzzle-piece");
+            div.style.width = `${tileSize}px`;
+            div.style.height = `${tileSize}px`;
+            div.style.backgroundImage = `url('${imgSrc}')`;
+            div.style.backgroundSize = `${gridSize * tileSize}px ${gridSize * tileSize}px`;
+            div.style.backgroundPosition = `${(num % gridSize) * -tileSize}px ${(Math.floor(num / gridSize)) * -tileSize}px`;
+            div.dataset.index = num;
+            div.onclick = () => moveTile(i);
+            if (num === emptyTile) div.style.visibility = "hidden"; // Hide last tile
+            puzzle.appendChild(div);
+        });
+    }
+
+
+    function moveTile(index) {
+        const emptyIndex = tiles.indexOf(emptyTile);
+        const validMoves = [index - 1, index + 1, index - gridSize, index + gridSize];
+
+        if (!validMoves.includes(emptyIndex)) return;
+
+        [tiles[index], tiles[emptyIndex]] = [tiles[emptyIndex], tiles[index]];
+        renderPuzzle();
+        checkWin();
+    }
 
         function checkWin() {
             if (tiles.every((num, i) => num === i)) {
@@ -115,8 +183,13 @@
             }
         }
 
+        document.getElementById("devSkip").onclick = function () {
+            document.getElementById("step2").classList.add("hidden");
+            document.getElementById("step3").classList.remove("hidden");
+        };
+
         document.getElementById("yesBtn").onclick = function () {
-            document.body.innerHTML = `<img src="your-happy-gif.gif" class="w-full h-screen object-contain">`;
+            document.body.innerHTML = `<img src="happy.gif" class="w-full h-screen object-contain">`;
         };
 
         document.getElementById("noBtn").onclick = function () {
@@ -129,8 +202,9 @@
                 this.style.left = `${Math.random() * 80}vw`;
             }
         };
-
+        shuffleTiles();
         renderPuzzle();
     </script>
+
 </body>
 </html>
